@@ -10,7 +10,7 @@ import (
 const HousesTableName = "houses"
 
 type house struct {
-	Id          uint64     `db:"id"`
+	Id          uint64     `db:"id,omitempty"`
 	UserId      uint64     `db:"user_id"`
 	Name        string     `db:"name"`
 	Description *string    `db:"description"`
