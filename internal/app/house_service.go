@@ -9,6 +9,7 @@ import (
 
 type HouseService interface {
 	Save(h domain.House) (domain.House, error)
+	Find(id uint64) (domain.House, error)
 }
 
 type houseService struct {
@@ -25,6 +26,16 @@ func (s houseService) Save(h domain.House) (domain.House, error) {
 	house, err := s.houseRepo.Save(h)
 	if err != nil {
 		log.Printf("houseService.Save(s houseService):%s", err)
+		return domain.House{}, err
+	}
+
+	return house, nil
+}
+
+func (s houseService) Find(id uint64) (domain.House, error) {
+	house, err := s.houseRepo.Find(id)
+	if err != nil {
+		log.Printf("houseService.Find(s houseService):%s", err)
 		return domain.House{}, err
 	}
 

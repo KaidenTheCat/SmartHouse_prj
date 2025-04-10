@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/BohdanBoriak/boilerplate-go-back/internal/app"
 	"github.com/BohdanBoriak/boilerplate-go-back/internal/domain"
@@ -39,8 +40,40 @@ func (c HouseController) Save() http.HandlerFunc {
 			InternalServerError(w, err)
 			return
 		}
-		var houseDto resources.HouseDto
-		houseDto = houseDto.DomainToDto(house)
-		Success(w, resources.UserDto{}.DomainToDto(user))
+		// var houseSaveDto resources.HouseSaveDto
+		// houseSaveDto = houseSaveDto.DomainToSaveDto(house)
+		// Success(w, resources.UserDto{}.DomainToDto(user))
+
+		var houseSaveDto resources.HouseSaveDto
+		houseSaveDto = houseSaveDto.DomainToSaveDto(house)
+		Success(w, houseSaveDto)
+	}
+}
+
+func (c HouseController) Find() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// house, err := requests.Bind(r, requests.HouseRequest{}, domain.House{})
+		// if err != nil {
+		// 	log.Printf("HouseController.Find(requests.Bind): %s", err)
+		// 	BadRequest(w, errors.New("invalid request body"))
+		// 	return
+		// }
+		idStr := r.URL.Query().Get("id")
+		id, err := strconv.ParseUint(idStr, 10, 64)
+		if err != nil {
+			log.Printf("HouseController.Find(strconv.ParseUint): %s", err)
+			BadRequest(w, errors.New("invalid id"))
+			return
+		}
+
+		house, err := c.houseServise.Find(id)
+		if err != nil {
+			log.Printf("HouseController.Find(c.houseServise.Find): %s", err)
+			InternalServerError(w, err)
+			return
+		}
+		var houseFindDto resources.HouseFindDto
+		houseFindDto = houseFindDto.DomainToFindDto(house)
+		Success(w, houseFindDto)
 	}
 }
