@@ -77,3 +77,27 @@ func (c HouseController) Find() http.HandlerFunc {
 		Success(w, houseFindDto)
 	}
 }
+
+func (c HouseController) FindList() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		uId := r.Context().Value(UserKey).(domain.User).Id
+
+		houses, err := c.houseServise.FindList(uId)
+		if err != nil {
+			log.Printf("HouseController.FindList(c.houseServise.FindList): %s", err)
+			InternalServerError(w, err)
+			return
+		}
+		housesFindListDto := c.mapDomainToFindListDto(houses)
+		Success(w, housesFindListDto)
+	}
+}
+
+func (c HouseController) mapDomainToFindListDto(houses []domain.House) []resources.HouseFindDto {
+	hs := make([]resources.HouseFindDto, len(houses))
+	for i, house := range houses {
+		hs[i] = resources.HouseFindDto{}.DomainToFindDto(house)
+	}
+	return hs
+}
