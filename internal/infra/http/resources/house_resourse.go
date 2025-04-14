@@ -6,7 +6,7 @@ import (
 	"github.com/BohdanBoriak/boilerplate-go-back/internal/domain"
 )
 
-type HouseSaveDto struct {
+type HouseDto struct {
 	Id          uint64     `json:"id"`
 	UserId      uint64     `json:"userId"`
 	Name        string     `json:"name"`
@@ -21,14 +21,23 @@ type HouseSaveDto struct {
 }
 
 type HouseFindDto struct {
+	Id          uint64    `json:"id"`
+	Name        string    `json:"name"`
+	Description *string   `json:"description,omitempty"`
+	City        string    `json:"city"`
+	Address     string    `json:"address"`
+	CreateDate  time.Time `json:"createDate"`
+}
+
+type HouseFindListDto struct {
 	Name        string  `json:"name"`
 	Description *string `json:"description,omitempty"`
 	City        string  `json:"city"`
 	Address     string  `json:"address"`
 }
 
-func (d HouseSaveDto) DomainToSaveDto(h domain.House) HouseSaveDto {
-	return HouseSaveDto{
+func (d HouseDto) DomainToDto(h domain.House) HouseDto {
+	return HouseDto{
 		Id:          h.Id,
 		UserId:      h.UserId,
 		Name:        h.Name,
@@ -45,9 +54,29 @@ func (d HouseSaveDto) DomainToSaveDto(h domain.House) HouseSaveDto {
 
 func (d HouseFindDto) DomainToFindDto(h domain.House) HouseFindDto {
 	return HouseFindDto{
+		Id:          h.Id,
+		Name:        h.Name,
+		Description: h.Description,
+		City:        h.City,
+		Address:     h.Address,
+		CreateDate:  h.CreateDate,
+	}
+}
+
+func (d HouseFindListDto) DomainToFindListDto(h domain.House) HouseFindListDto {
+	return HouseFindListDto{
 		Name:        h.Name,
 		Description: h.Description,
 		City:        h.City,
 		Address:     h.Address,
 	}
+}
+
+func (d HouseFindListDto) DomainToDtoCollection(houses []domain.House) []HouseFindListDto {
+	hs := make([]HouseFindListDto, len(houses))
+	for i, h := range houses {
+		hs[i] = d.DomainToFindListDto(h)
+	}
+
+	return hs
 }
