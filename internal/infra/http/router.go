@@ -117,8 +117,16 @@ func HouseRouter(r chi.Router, hc controllers.HouseController, hs app.HouseServi
 			hc.Find(),
 		)
 		apiRouter.Get(
-			"/list",
+			"/",
 			hc.FindList(),
+		)
+		apiRouter.With(hpom).Put(
+			"/{houseId}",
+			hc.Update(),
+		)
+		apiRouter.With(hpom).Delete(
+			"/{houseId}",
+			hc.Delete(),
 		)
 	})
 }

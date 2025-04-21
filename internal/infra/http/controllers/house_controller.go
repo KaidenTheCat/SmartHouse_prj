@@ -78,3 +78,79 @@ func (c HouseController) FindList() http.HandlerFunc {
 		Success(w, resources.HouseFindListDto{}.DomainToDtoCollection(houses))
 	}
 }
+
+func (c HouseController) Update() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		updateHouse, err := requests.Bind(r, requests.UpdateHouseRequest{}, domain.House{})
+		if err != nil {
+			log.Printf("HouseController.Update(requests.Bind): %s", err)
+			BadRequest(w, errors.New("invalid request body"))
+			return
+		}
+
+		houseId := r.Context().Value(HouseKey).(domain.House).Id
+		house, err := c.houseServise.FindById(houseId)
+		user := r.Context().Value(UserKey).(domain.User)
+
+		if user.Id != house.Id {
+			err := errors.New("access denied")
+			Forbidden(w, err)
+			return
+		}
+
+		if err != nil {
+			log.Printf("HouseController.Update(c.houseServise.FindById): %s", err)
+			return
+		}
+
+		if updateHouse.Name != "" {
+			house.Name = updateHouse.Name
+		}
+		if updateHouse.City != "" {
+			house.City = updateHouse.City
+		}
+		if updateHouse.Address != "" {
+			house.Address = updateHouse.Address
+		}
+		if updateHouse.Lat != 0 {
+			house.Lat = updateHouse.Lat
+		}
+		if updateHouse.Lon != 0 {
+			house.Lon = updateHouse.Lon
+		}
+
+		house, err = c.houseServise.Update(house)
+		if err != nil {
+			log.Printf("HouseController.Update(c.houseServise.Update): %s", err)
+			InternalServerError(w, err)
+			return
+		}
+
+		var houseUpdateDto resources.HouseDto
+		houseUpdateDto = houseUpdateDto.DomainToDto(house)
+		Success(w, houseUpdateDto)
+	}
+}
+
+func (c HouseController) Delete() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		house := r.Context().Value(HouseKey).(domain.House)
+		user := r.Context().Value(UserKey).(domain.User)
+
+		if house.UserId != user.Id {
+			err := errors.New("access denied")
+			Forbidden(w, err)
+			return
+		}
+
+		err := c.houseServise.Delete(house.Id)
+		if err != nil {
+			log.Printf("HouseController.Delete(c.houseServise.Delete):  %s", err)
+			InternalServerError(w, err)
+			return
+		}
+
+		noContent(w)
+	}
+}
