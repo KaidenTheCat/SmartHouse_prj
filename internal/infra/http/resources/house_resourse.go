@@ -21,12 +21,13 @@ type HouseDto struct {
 }
 
 type HouseFindDto struct {
-	Id          uint64    `json:"id"`
-	Name        string    `json:"name"`
-	Description *string   `json:"description,omitempty"`
-	City        string    `json:"city"`
-	Address     string    `json:"address"`
-	CreateDate  time.Time `json:"createDate"`
+	Id          uint64            `json:"id"`
+	Name        string            `json:"name"`
+	Description *string           `json:"description,omitempty"`
+	City        string            `json:"city"`
+	Address     string            `json:"address"`
+	CreateDate  time.Time         `json:"createDate"`
+	Rooms       []RoomFindListDto `json:"rooms"`
 }
 
 type HouseFindListDto struct {

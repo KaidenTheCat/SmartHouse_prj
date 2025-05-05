@@ -96,19 +96,6 @@ func (r houseRepository) Update(h domain.House) (domain.House, error) {
 
 	h = r.mapModelToDomain(hs)
 	return h, nil
-
-	// hs := r.mapDomainToModel(h)
-	// hs.UpdatedDate = time.Now()
-
-	// err := r.coll.
-	// 	Find(db.Cond{
-	// 		"id":           hs.Id,
-	// 		"deleted_date": nil}).Update(&h)
-	// if err != nil {
-	// 	return domain.House{}, err
-	// }
-
-	// return r.mapModelToDomain(hs), nil
 }
 
 func (r houseRepository) Delete(id uint64) error {

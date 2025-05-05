@@ -58,8 +58,18 @@ func (c HouseController) Find() http.HandlerFunc {
 			return
 		}
 
+		rooms, err := c.houseServise.FindRoomByHouseId(house.Id)
+		if err != nil {
+			log.Printf("HouseController.Find(c.houseServise.FindRoomByHouseId): %s", err)
+			return
+		}
+
 		var houseFindDto resources.HouseFindDto
 		houseFindDto = houseFindDto.DomainToFindDto(house)
+
+		roomsDto := resources.RoomFindListDto{}.DomainToDtoCollection(rooms)
+		houseFindDto.Rooms = roomsDto
+
 		Success(w, houseFindDto)
 	}
 }
