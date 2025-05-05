@@ -50,13 +50,6 @@ func (c HouseController) Find() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		house := r.Context().Value(HouseKey).(domain.House)
-		user := r.Context().Value(UserKey).(domain.User)
-
-		if house.UserId != user.Id {
-			err := errors.New("access denied")
-			Forbidden(w, err)
-			return
-		}
 
 		rooms, err := c.houseServise.FindRoomByHouseId(house.Id)
 		if err != nil {
@@ -100,13 +93,6 @@ func (c HouseController) Update() http.HandlerFunc {
 
 		houseId := r.Context().Value(HouseKey).(domain.House).Id
 		house, err := c.houseServise.FindById(houseId)
-		user := r.Context().Value(UserKey).(domain.User)
-
-		if user.Id != house.Id {
-			err := errors.New("access denied")
-			Forbidden(w, err)
-			return
-		}
 
 		if err != nil {
 			log.Printf("HouseController.Update(c.houseServise.FindById): %s", err)
@@ -146,13 +132,6 @@ func (c HouseController) Delete() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		house := r.Context().Value(HouseKey).(domain.House)
-		user := r.Context().Value(UserKey).(domain.User)
-
-		if house.UserId != user.Id {
-			err := errors.New("access denied")
-			Forbidden(w, err)
-			return
-		}
 
 		err := c.houseServise.Delete(house.Id)
 		if err != nil {
