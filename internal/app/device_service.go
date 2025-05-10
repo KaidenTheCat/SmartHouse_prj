@@ -9,6 +9,8 @@ import (
 
 type DeviceService interface {
 	Save(h domain.Device) (domain.Device, error)
+	Find(id uint64) (interface{}, error)
+	FindById(id uint64) (domain.Device, error)
 }
 
 type deviceService struct {
@@ -25,6 +27,26 @@ func (s deviceService) Save(h domain.Device) (domain.Device, error) {
 	device, err := s.deviceRepo.Save(h)
 	if err != nil {
 		log.Printf("deviceService.Save(s.deviceRepo.Save): %s", err)
+		return domain.Device{}, err
+	}
+
+	return device, nil
+}
+
+func (s deviceService) Find(id uint64) (interface{}, error) {
+	device, err := s.deviceRepo.Find(id)
+	if err != nil {
+		log.Printf("deviceService.Find(s.deviceRepo.Find): %s", err)
+		return domain.Device{}, err
+	}
+
+	return device, nil
+}
+
+func (s deviceService) FindById(id uint64) (domain.Device, error) {
+	device, err := s.deviceRepo.Find(id)
+	if err != nil {
+		log.Printf("deviceService.FindById(s.deviceRepo.Find): %s", err)
 		return domain.Device{}, err
 	}
 

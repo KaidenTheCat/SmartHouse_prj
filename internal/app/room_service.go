@@ -38,7 +38,7 @@ func (s roomService) Save(h domain.Room) (domain.Room, error) {
 func (s roomService) Find(id uint64) (interface{}, error) {
 	room, err := s.roomRepo.Find(id)
 	if err != nil {
-		log.Printf("roomService.FindById(s.roomRepo.Find): %s", err)
+		log.Printf("roomService.Find(s.roomRepo.Find): %s", err)
 		return domain.Room{}, err
 	}
 

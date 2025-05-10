@@ -54,7 +54,7 @@ func Router(cont container.Container) http.Handler {
 				UserRouter(apiRouter, cont.UserController)
 				HouseRouter(apiRouter, cont.HouseController, cont.HouseService)
 				RoomRouter(apiRouter, cont.RoomController, cont.HouseService, cont.RoomService)
-				DeviceRouter(apiRouter, cont.DeviceController, cont.HouseService, cont.RoomService)
+				DeviceRouter(apiRouter, cont.DeviceController, cont.HouseService, cont.RoomService, cont.DeviceService)
 
 				apiRouter.Handle("/*", NotFoundJSON())
 			})
@@ -156,13 +156,18 @@ func RoomRouter(r chi.Router, rc controllers.RoomController, hs app.HouseService
 	})
 }
 
-func DeviceRouter(r chi.Router, dc controllers.DeviceController, hs app.HouseService, rm app.RoomService) {
+func DeviceRouter(r chi.Router, dc controllers.DeviceController, hs app.HouseService, rm app.RoomService, dv app.DeviceService) {
 	hpom := middlewares.PathObject("houseId", controllers.HouseKey, hs)
 	rpom := middlewares.PathObject("roomId", controllers.RoomKey, rm)
+	dpom := middlewares.PathObject("deviceId", controllers.DeviceKey, dv)
 	r.Route("/houses/{houseId}/rooms/{roomId}/device", func(apiRouter chi.Router) {
 		apiRouter.With(hpom, rpom).Post(
 			"/",
 			dc.Save(),
+		)
+		apiRouter.With(dpom).Get(
+			"/{deviceId}",
+			dc.Find(),
 		)
 	})
 }

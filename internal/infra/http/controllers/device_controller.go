@@ -48,3 +48,14 @@ func (c DeviceController) Save() http.HandlerFunc {
 		Success(w, deviceSaveDto)
 	}
 }
+
+func (c DeviceController) Find() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		device := r.Context().Value(DeviceKey).(domain.Device)
+
+		var deviceFindDto resources.DeviceFindDto
+		deviceFindDto = deviceFindDto.DomainToFindDto(device)
+		Success(w, deviceFindDto)
+	}
+}
