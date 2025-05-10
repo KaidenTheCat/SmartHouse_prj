@@ -12,12 +12,12 @@ import (
 )
 
 type RoomController struct {
-	roomServise app.RoomService
+	roomService app.RoomService
 }
 
 func NewRoomController(hs app.RoomService) RoomController {
 	return RoomController{
-		roomServise: hs,
+		roomService: hs,
 	}
 }
 
@@ -33,7 +33,7 @@ func (c RoomController) Save() http.HandlerFunc {
 		house := r.Context().Value(HouseKey).(domain.House)
 		room.HouseId = house.Id
 
-		room, err = c.roomServise.Save(room)
+		room, err = c.roomService.Save(room)
 		if err != nil {
 			log.Printf("RoomController.Save(c.roomServise.Save): %s", err)
 			InternalServerError(w, err)
@@ -67,7 +67,7 @@ func (c RoomController) Update() http.HandlerFunc {
 		}
 
 		roomId := r.Context().Value(RoomKey).(domain.Room).Id
-		room, err := c.roomServise.FindById(roomId)
+		room, err := c.roomService.FindById(roomId)
 		if err != nil {
 			log.Printf("RoomController.Update(c.roomServise.FindById): %s", err)
 			return
@@ -78,7 +78,7 @@ func (c RoomController) Update() http.HandlerFunc {
 			room.Description = updateRoom.Description
 		}
 
-		room, err = c.roomServise.Update(room)
+		room, err = c.roomService.Update(room)
 		if err != nil {
 			log.Printf("RoomController.Update(c.roomServise.Update): %s", err)
 			InternalServerError(w, err)
@@ -96,7 +96,7 @@ func (c RoomController) Delete() http.HandlerFunc {
 
 		room := r.Context().Value(RoomKey).(domain.Room)
 
-		err := c.roomServise.Delete(room.Id)
+		err := c.roomService.Delete(room.Id)
 		if err != nil {
 			log.Printf("RoomController.Delete(c.roomServise.Delete):  %s", err)
 			InternalServerError(w, err)
