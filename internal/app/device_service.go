@@ -11,6 +11,7 @@ type DeviceService interface {
 	Save(h domain.Device) (domain.Device, error)
 	Find(id uint64) (interface{}, error)
 	FindById(id uint64) (domain.Device, error)
+	Update(d domain.Device) (domain.Device, error)
 	Delete(id uint64) error
 }
 
@@ -48,6 +49,16 @@ func (s deviceService) FindById(id uint64) (domain.Device, error) {
 	device, err := s.deviceRepo.Find(id)
 	if err != nil {
 		log.Printf("deviceService.FindById(s.deviceRepo.Find): %s", err)
+		return domain.Device{}, err
+	}
+
+	return device, nil
+}
+
+func (s deviceService) Update(d domain.Device) (domain.Device, error) {
+	device, err := s.deviceRepo.Update(d)
+	if err != nil {
+		log.Printf("deviceService.Update(s.deviceRepo.Update): %s", err)
 		return domain.Device{}, err
 	}
 

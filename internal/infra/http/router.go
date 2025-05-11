@@ -173,6 +173,10 @@ func DeviceRouter(r chi.Router, dc controllers.DeviceController, hs app.HouseSer
 			"/{deviceId}",
 			dc.Delete(),
 		)
+		apiRouter.With(dpom).Put(
+			"/{deviceId}",
+			dc.Update(),
+		)
 	})
 }
 

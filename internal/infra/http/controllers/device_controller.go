@@ -60,6 +60,52 @@ func (c DeviceController) Find() http.HandlerFunc {
 	}
 }
 
+func (c DeviceController) Update() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		updateDevice, err := requests.Bind(r, requests.UpdateDeviceRequest{}, domain.Device{})
+		if err != nil {
+			log.Printf("DeviceController.Update(requests.Bind): %s", err)
+			BadRequest(w, errors.New("invalid request body"))
+			return
+		}
+
+		deviceId := r.Context().Value(DeviceKey).(domain.Device).Id
+		device, err := c.deviceServise.FindById(deviceId)
+
+		if err != nil {
+			log.Printf("DeviceController.Update(c.deviceServise.FindById): %s", err)
+			return
+		}
+
+		if updateDevice.Serial_number != "" {
+			device.Serial_number = updateDevice.Serial_number
+		}
+		if updateDevice.Category != "" {
+			device.Category = updateDevice.Category
+		}
+		if updateDevice.Characteristics != nil {
+			device.Characteristics = updateDevice.Characteristics
+		}
+		if updateDevice.Units != nil {
+			device.Units = updateDevice.Units
+		}
+		if updateDevice.Power_consumption != nil {
+			device.Power_consumption = updateDevice.Power_consumption
+		}
+
+		device, err = c.deviceServise.Update(device)
+		if err != nil {
+			log.Printf("DeviceController.Update(c.deviceServise.Update): %s", err)
+			InternalServerError(w, err)
+			return
+		}
+
+		var deviceUpdateDto resources.DeviceDto
+		deviceUpdateDto = deviceUpdateDto.DomainToDto(device)
+		Success(w, deviceUpdateDto)
+	}
+}
+
 func (c DeviceController) Delete() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 

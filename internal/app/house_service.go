@@ -82,7 +82,7 @@ func (s houseService) FindList(uId uint64) ([]domain.House, error) {
 func (s houseService) Update(h domain.House) (domain.House, error) {
 	house, err := s.houseRepo.Update(h)
 	if err != nil {
-		log.Printf("houseService.Update(.houseRepo.Update): %s", err)
+		log.Printf("houseService.Update(s.houseRepo.Update): %s", err)
 		return domain.House{}, err
 	}
 

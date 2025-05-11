@@ -102,6 +102,9 @@ func (c HouseController) Update() http.HandlerFunc {
 		if updateHouse.Name != "" {
 			house.Name = updateHouse.Name
 		}
+		if updateHouse.Description != nil {
+			house.Description = updateHouse.Description
+		}
 		if updateHouse.City != "" {
 			house.City = updateHouse.City
 		}
