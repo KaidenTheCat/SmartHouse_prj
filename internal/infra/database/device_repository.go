@@ -47,6 +47,7 @@ func (r deviceRepository) Save(d domain.Device) (domain.Device, error) {
 	dv := r.mapDomainToModel(d)
 	dv.CreateDate = time.Now()
 	dv.UpdatedDate = time.Now()
+	dv.Uuid = uuid.New()
 
 	err := r.coll.InsertReturning(&dv)
 	if err != nil {
