@@ -11,17 +11,20 @@ type RoomService interface {
 	Save(h domain.Room) (domain.Room, error)
 	Find(id uint64) (interface{}, error)
 	FindById(id uint64) (domain.Room, error)
+	FindDeviceByRoomId(id uint64) ([]domain.Device, error)
 	Update(r domain.Room) (domain.Room, error)
 	Delete(id uint64) error
 }
 
 type roomService struct {
-	roomRepo database.RoomRepository
+	roomRepo   database.RoomRepository
+	deviceRepo database.DeviceRepository
 }
 
-func NewRoomService(hr database.RoomRepository) roomService {
+func NewRoomService(hr database.RoomRepository, dr database.DeviceRepository) roomService {
 	return roomService{
-		roomRepo: hr,
+		roomRepo:   hr,
+		deviceRepo: dr,
 	}
 }
 
@@ -43,6 +46,16 @@ func (s roomService) Find(id uint64) (interface{}, error) {
 	}
 
 	return room, nil
+}
+
+func (s roomService) FindDeviceByRoomId(id uint64) ([]domain.Device, error) {
+	device, err := s.deviceRepo.FindList(id)
+	if err != nil {
+		log.Printf("roomService.FindDeviceByRoomId(s.deviceRepo.FindList): %s", err)
+		return []domain.Device{}, err
+	}
+
+	return device, nil
 }
 
 func (s roomService) FindById(id uint64) (domain.Room, error) {

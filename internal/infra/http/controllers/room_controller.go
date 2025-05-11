@@ -50,9 +50,18 @@ func (c RoomController) Find() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		room := r.Context().Value(RoomKey).(domain.Room)
+		devices, err := c.roomService.FindDeviceByRoomId(room.Id)
+		if err != nil {
+			log.Printf("RoomController.Find(c.roomService.FindDeviceByRoomId): %s", err)
+			return
+		}
 
 		var roomFindDto resources.RoomFindDto
 		roomFindDto = roomFindDto.DomainToFindDto(room)
+
+		devicesDto := resources.DeviceFindListDto{}.DomainToDtoCollection(devices)
+		roomFindDto.Devices = devicesDto
+
 		Success(w, roomFindDto)
 	}
 }

@@ -17,10 +17,11 @@ type RoomDto struct {
 }
 
 type RoomFindDto struct {
-	Id          uint64    `json:"id"`
-	Name        string    `json:"name"`
-	Description *string   `json:"description,omitempty"`
-	CreateDate  time.Time `json:"createDate"`
+	Id          uint64              `json:"id"`
+	Name        string              `json:"name"`
+	Description *string             `json:"description,omitempty"`
+	CreateDate  time.Time           `json:"createDate"`
+	Devices     []DeviceFindListDto `json:"devices"`
 }
 
 type RoomFindListDto struct {

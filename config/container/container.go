@@ -53,7 +53,7 @@ func New(conf config.Configuration) Container {
 	userService := app.NewUserService(userRepository)
 	authService := app.NewAuthService(sessionRepository, userRepository, tknAuth, conf.JwtTTL)
 	houseService := app.NewHouseService(houseRepository, roomeRepository)
-	roomService := app.NewRoomService(roomeRepository)
+	roomService := app.NewRoomService(roomeRepository, deviceRepository)
 	deviceService := app.NewHDeviceService(deviceRepository)
 
 	authController := controllers.NewAuthController(authService, userService)

@@ -34,6 +34,13 @@ type DeviceFindDto struct {
 	Power_consumption *string   `json:"power_consumption,omitempty"`
 }
 
+type DeviceFindListDto struct {
+	Id              uint64    `json:"id"`
+	Uuid            uuid.UUID `json:"uuid"`
+	Serial_number   string    `json:"serial_number,omitempty"`
+	Characteristics *string   `json:"characteristics"`
+}
+
 func (d DeviceDto) DomainToDto(dd domain.Device) DeviceDto {
 	return DeviceDto{
 		Id:                dd.Id,
@@ -63,4 +70,22 @@ func (d DeviceFindDto) DomainToFindDto(dd domain.Device) DeviceFindDto {
 		Units:             dd.Units,
 		Power_consumption: dd.Power_consumption,
 	}
+}
+
+func (d DeviceFindListDto) DomainToFindListDto(dd domain.Device) DeviceFindListDto {
+	return DeviceFindListDto{
+		Id:              dd.Id,
+		Uuid:            dd.Uuid,
+		Serial_number:   dd.Serial_number,
+		Characteristics: dd.Characteristics,
+	}
+}
+
+func (d DeviceFindListDto) DomainToDtoCollection(devices []domain.Device) []DeviceFindListDto {
+	dv := make([]DeviceFindListDto, len(devices))
+	for i, h := range devices {
+		dv[i] = d.DomainToFindListDto(h)
+	}
+
+	return dv
 }
