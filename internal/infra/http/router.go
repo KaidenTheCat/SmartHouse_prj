@@ -169,6 +169,10 @@ func DeviceRouter(r chi.Router, dc controllers.DeviceController, hs app.HouseSer
 			"/{deviceId}",
 			dc.Find(),
 		)
+		apiRouter.With(dpom).Delete(
+			"/{deviceId}",
+			dc.Delete(),
+		)
 	})
 }
 

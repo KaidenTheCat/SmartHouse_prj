@@ -59,3 +59,19 @@ func (c DeviceController) Find() http.HandlerFunc {
 		Success(w, deviceFindDto)
 	}
 }
+
+func (c DeviceController) Delete() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		device := r.Context().Value(DeviceKey).(domain.Device)
+
+		err := c.deviceServise.Delete(device.Id)
+		if err != nil {
+			log.Printf("DeviceController.Delete(c.deviceServise.Delete):  %s", err)
+			InternalServerError(w, err)
+			return
+		}
+
+		noContent(w)
+	}
+}

@@ -11,6 +11,7 @@ type DeviceService interface {
 	Save(h domain.Device) (domain.Device, error)
 	Find(id uint64) (interface{}, error)
 	FindById(id uint64) (domain.Device, error)
+	Delete(id uint64) error
 }
 
 type deviceService struct {
@@ -51,4 +52,14 @@ func (s deviceService) FindById(id uint64) (domain.Device, error) {
 	}
 
 	return device, nil
+}
+
+func (s deviceService) Delete(id uint64) error {
+	err := s.deviceRepo.Delete(id)
+	if err != nil {
+		log.Printf("deviceService.Delete(s.deviceRepo.Delete): %s", err)
+		return err
+	}
+
+	return nil
 }
