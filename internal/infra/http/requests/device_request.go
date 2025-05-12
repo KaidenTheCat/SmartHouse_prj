@@ -11,6 +11,8 @@ type DeviceRequest struct {
 }
 
 type UpdateDeviceRequest struct {
+	House_id          *uint64 `json:"house_id"`
+	Room_id           *uint64 `json:"room_id"`
 	Serial_number     *string `json:"serial_number"`
 	Characteristics   *string `json:"characteristics"`
 	Category          *string `json:"category"`
@@ -20,6 +22,8 @@ type UpdateDeviceRequest struct {
 
 func (r UpdateDeviceRequest) ToDomainModel() (interface{}, error) {
 	var (
+		house_id      uint64
+		room_id       uint64
 		serial_number string
 		category      string
 	)
@@ -30,8 +34,16 @@ func (r UpdateDeviceRequest) ToDomainModel() (interface{}, error) {
 	if r.Category != nil {
 		category = *r.Category
 	}
+	if r.House_id != nil {
+		house_id = *r.House_id
+	}
+	if r.Room_id != nil {
+		room_id = *r.Room_id
+	}
 
 	return domain.Device{
+		House_id:          house_id,
+		Room_id:           room_id,
 		Serial_number:     serial_number,
 		Characteristics:   r.Characteristics,
 		Category:          category,

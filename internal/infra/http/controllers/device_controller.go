@@ -30,6 +30,16 @@ func (c DeviceController) Save() http.HandlerFunc {
 			return
 		}
 
+		if (device.Power_consumption != nil && device.Units != nil) || // Не може бути і те і те
+			(device.Category != domain.SENSOR && device.Category != domain.ACTUATOR) || //Повинно бути або SENSOR або ACTUATOR
+			(device.Category == domain.SENSOR && device.Units == nil) || //якщо є SENSOR то має бути Units
+			(device.Category == domain.ACTUATOR && device.Power_consumption == nil) { //якщо є ACTUATOR то має бути Power_consumption
+
+			err = errors.New("wrong data request")
+			Forbidden(w, err)
+			return
+		}
+
 		house := r.Context().Value(HouseKey).(domain.House)
 		room := r.Context().Value(RoomKey).(domain.Room)
 
@@ -86,11 +96,26 @@ func (c DeviceController) Update() http.HandlerFunc {
 		if updateDevice.Characteristics != nil {
 			device.Characteristics = updateDevice.Characteristics
 		}
-		if updateDevice.Units != nil {
-			device.Units = updateDevice.Units
+
+		if updateDevice.House_id != 0 {
+			device.House_id = updateDevice.House_id
 		}
-		if updateDevice.Power_consumption != nil {
-			device.Power_consumption = updateDevice.Power_consumption
+		if updateDevice.Room_id != 0 {
+			device.Room_id = updateDevice.Room_id
+		}
+
+		if device.Category == domain.SENSOR {
+			if updateDevice.Units != nil {
+				device.Units = updateDevice.Units
+			}
+			device.Power_consumption = nil
+		}
+
+		if device.Category == domain.ACTUATOR {
+			if updateDevice.Power_consumption != nil {
+				device.Power_consumption = updateDevice.Power_consumption
+			}
+			device.Units = nil
 		}
 
 		device, err = c.deviceServise.Update(device)
