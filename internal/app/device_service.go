@@ -19,14 +19,14 @@ type deviceService struct {
 	deviceRepo database.DeviceRepository
 }
 
-func NewHDeviceService(dr database.DeviceRepository) deviceService {
+func NewDeviceService(dr database.DeviceRepository) deviceService {
 	return deviceService{
 		deviceRepo: dr,
 	}
 }
 
-func (s deviceService) Save(h domain.Device) (domain.Device, error) {
-	device, err := s.deviceRepo.Save(h)
+func (s deviceService) Save(d domain.Device) (domain.Device, error) {
+	device, err := s.deviceRepo.Save(d)
 	if err != nil {
 		log.Printf("deviceService.Save(s.deviceRepo.Save): %s", err)
 		return domain.Device{}, err
