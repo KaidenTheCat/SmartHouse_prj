@@ -4,18 +4,17 @@ import (
 	"time"
 
 	"github.com/BohdanBoriak/boilerplate-go-back/internal/domain"
-	"github.com/google/uuid"
 	"github.com/upper/db/v4"
 )
 
-const EventTableName = "measurements"
+const EventTableName = "events"
 
 type event struct {
-	Id          uint64    `db:"id,omitempty"`
-	Device_uuid uuid.UUID `db:"device_uuid"`
-	Room_id     uint64    `db:"room_id"`
-	Action      string    `db:"value"`
-	CreateDate  time.Time `db:"created_date"`
+	Id         uint64    `db:"id,omitempty"`
+	Device_id  uint64    `db:"device_id"`
+	Room_id    uint64    `db:"room_id"`
+	Action     string    `db:"action"`
+	CreateDate time.Time `db:"created_date"`
 }
 
 type EventRepository interface {
@@ -49,21 +48,21 @@ func (r eventRepository) Save(e domain.Event) (domain.Event, error) {
 
 func (r eventRepository) mapDomainToModel(d domain.Event) event {
 	return event{
-		Id:          d.Id,
-		Device_uuid: d.Device_uuid,
-		Action:      d.Action,
-		Room_id:     d.Room_id,
-		CreateDate:  d.CreateDate,
+		Id:         d.Id,
+		Device_id:  d.Device_id,
+		Action:     d.Action,
+		Room_id:    d.Room_id,
+		CreateDate: d.CreateDate,
 	}
 }
 
 func (r eventRepository) mapModelToDomain(e event) domain.Event {
 	return domain.Event{
-		Id:          e.Id,
-		Device_uuid: e.Device_uuid,
-		Room_id:     e.Room_id,
-		Action:      e.Action,
-		CreateDate:  e.CreateDate,
+		Id:         e.Id,
+		Device_id:  e.Device_id,
+		Room_id:    e.Room_id,
+		Action:     e.Action,
+		CreateDate: e.CreateDate,
 	}
 }
 

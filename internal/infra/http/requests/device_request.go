@@ -5,7 +5,7 @@ import "github.com/BohdanBoriak/boilerplate-go-back/internal/domain"
 type DeviceRequest struct {
 	Serial_number     string  `json:"serial_number" validate:"required"`
 	Characteristics   *string `json:"characteristics"`
-	Category          string  `json:"category" validate:"required"`
+	Category          string  `json:"category" validate:"oneof=ACTUATOR SENSOR"`
 	Units             *string `json:"units"`
 	Power_consumption *string `json:"power_consumption"`
 }

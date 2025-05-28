@@ -4,18 +4,17 @@ import (
 	"time"
 
 	"github.com/BohdanBoriak/boilerplate-go-back/internal/domain"
-	"github.com/google/uuid"
 	"github.com/upper/db/v4"
 )
 
 const MeasurementTableName = "measurements"
 
 type measurement struct {
-	Id          uint64    `db:"id,omitempty"`
-	Device_uuid uuid.UUID `db:"device_uuid"`
-	Room_id     uint64    `db:"room_id"`
-	Value       string    `db:"value"`
-	CreateDate  time.Time `db:"created_date"`
+	Id         uint64    `db:"id,omitempty"`
+	Device_id  uint64    `db:"device_id"`
+	Room_id    uint64    `db:"room_id"`
+	Value      string    `db:"value"`
+	CreateDate time.Time `db:"created_date"`
 }
 
 type MeasurementRepository interface {
@@ -49,21 +48,21 @@ func (r measurementRepository) Save(m domain.Measurement) (domain.Measurement, e
 
 func (r measurementRepository) mapDomainToModel(d domain.Measurement) measurement {
 	return measurement{
-		Id:          d.Id,
-		Device_uuid: d.Device_uuid,
-		Room_id:     d.Room_id,
-		Value:       d.Value,
-		CreateDate:  d.CreateDate,
+		Id:         d.Id,
+		Device_id:  d.Device_id,
+		Room_id:    d.Room_id,
+		Value:      d.Value,
+		CreateDate: d.CreateDate,
 	}
 }
 
 func (r measurementRepository) mapModelToDomain(m measurement) domain.Measurement {
 	return domain.Measurement{
-		Id:          m.Id,
-		Device_uuid: m.Device_uuid,
-		Room_id:     m.Room_id,
-		Value:       m.Value,
-		CreateDate:  m.CreateDate,
+		Id:         m.Id,
+		Device_id:  m.Device_id,
+		Room_id:    m.Room_id,
+		Value:      m.Value,
+		CreateDate: m.CreateDate,
 	}
 }
 

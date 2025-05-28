@@ -8,6 +8,7 @@ import (
 
 type Event struct {
 	Id          uint64
+	Device_id   uint64
 	Device_uuid uuid.UUID
 	Room_id     uint64
 	Action      string

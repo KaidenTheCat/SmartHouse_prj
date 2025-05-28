@@ -44,7 +44,10 @@ func Router(cont container.Container) http.Handler {
 			apiRouter.Group(func(apiRouter chi.Router) {
 				apiRouter.Route("/auth", func(apiRouter chi.Router) {
 					AuthRouter(apiRouter, cont.AuthController, cont.AuthMw)
+
 				})
+				MeasurementRouter(apiRouter, cont.MeasurementController)
+				EventRouter(apiRouter, cont.EventController)
 			})
 
 			// Protected routes
@@ -176,6 +179,24 @@ func DeviceRouter(r chi.Router, dc controllers.DeviceController, hs app.HouseSer
 		apiRouter.With(dpom).Put(
 			"/{deviceId}",
 			dc.Update(),
+		)
+	})
+}
+
+func MeasurementRouter(r chi.Router, mc controllers.MeasurementController) {
+	r.Route("/measurement", func(apiRouter chi.Router) {
+		apiRouter.Post(
+			"/",
+			mc.Save(),
+		)
+	})
+}
+
+func EventRouter(r chi.Router, ec controllers.EventController) {
+	r.Route("/event", func(apiRouter chi.Router) {
+		apiRouter.Post(
+			"/",
+			ec.Save(),
 		)
 	})
 }

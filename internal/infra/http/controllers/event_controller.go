@@ -29,8 +29,15 @@ func (c EventController) Save() http.HandlerFunc {
 			return
 		}
 
-		room := r.Context().Value(RoomKey).(domain.Room)
-		event.Room_id = room.Id
+		device, err := c.eventService.FindByUuid(event.Device_uuid)
+		if err != nil {
+			log.Printf("EventController.Save(c.eventService.FindByUuid): %s", err)
+			InternalServerError(w, err)
+			return
+		}
+
+		event.Device_id = device.Id
+		event.Room_id = device.Room_id
 
 		event, err = c.eventService.Save(event)
 		if err != nil {

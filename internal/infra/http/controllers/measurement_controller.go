@@ -29,8 +29,15 @@ func (c MeasurementController) Save() http.HandlerFunc {
 			return
 		}
 
-		room := r.Context().Value(RoomKey).(domain.Room)
-		measurement.Room_id = room.Id
+		device, err := c.measurementService.FindByUuid(measurement.Device_uuid)
+		if err != nil {
+			log.Printf("MeasurementController.Save(c.measurementService.FindByUuid): %s", err)
+			InternalServerError(w, err)
+			return
+		}
+
+		measurement.Device_id = device.Id
+		measurement.Room_id = device.Room_id
 
 		measurement, err = c.measurementService.Save(measurement)
 		if err != nil {
