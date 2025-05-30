@@ -12,13 +12,18 @@ func IsOwner() func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			user := r.Context().Value(controllers.UserKey).(domain.User)
+
 			house := r.Context().Value(controllers.HouseKey).(domain.House)
+			if house.UserId != user.Id {
+				controllers.Forbidden(w, errors.New("access denied: user doesn't own the house"))
+				return
+			}
 
 			roomCtx := r.Context().Value(controllers.RoomKey)
 			if roomCtx != nil {
 				room := roomCtx.(domain.Room)
 				if room.HouseId != house.Id {
-					controllers.Forbidden(w, errors.New("Access denied: room doesn't belong to house"))
+					controllers.Forbidden(w, errors.New("access denied: room doesn't belong to house"))
 					return
 				}
 			}
@@ -28,16 +33,10 @@ func IsOwner() func(http.Handler) http.Handler {
 				device := deviceCtx.(domain.Device)
 				room := roomCtx.(domain.Room)
 				if device.Room_id != room.Id {
-					controllers.Forbidden(w, errors.New("Access denied: room doesn't have this device"))
+					controllers.Forbidden(w, errors.New("access denied: room doesn't have this device"))
 					return
 				}
 			}
-
-			if house.UserId != user.Id {
-				controllers.Forbidden(w, errors.New("Access denied: user doesn't own the house"))
-				return
-			}
-
 			next.ServeHTTP(w, r)
 		})
 	}

@@ -144,15 +144,15 @@ func RoomRouter(r chi.Router, rc controllers.RoomController, hs app.HouseService
 			"/",
 			rc.Save(),
 		)
-		apiRouter.With(rpom).Get(
+		apiRouter.With(hpom, rpom, middlewares.IsOwner()).Get(
 			"/{roomId}",
 			rc.Find(),
 		)
-		apiRouter.With(rpom).Delete(
+		apiRouter.With(hpom, rpom, middlewares.IsOwner()).Delete(
 			"/{roomId}",
 			rc.Delete(),
 		)
-		apiRouter.With(rpom).Put(
+		apiRouter.With(hpom, rpom, middlewares.IsOwner()).Put(
 			"/{roomId}",
 			rc.Update(),
 		)
@@ -168,17 +168,21 @@ func DeviceRouter(r chi.Router, dc controllers.DeviceController, hs app.HouseSer
 			"/",
 			dc.Save(),
 		)
-		apiRouter.With(dpom).Get(
+		apiRouter.With(hpom, rpom, dpom, middlewares.IsOwner()).Get(
 			"/{deviceId}",
 			dc.Find(),
 		)
-		apiRouter.With(dpom).Delete(
+		apiRouter.With(hpom, rpom, dpom, middlewares.IsOwner()).Delete(
 			"/{deviceId}",
 			dc.Delete(),
 		)
-		apiRouter.With(dpom).Put(
+		apiRouter.With(hpom, rpom, dpom, middlewares.IsOwner()).Put(
 			"/{deviceId}",
 			dc.Update(),
+		)
+		apiRouter.With(hpom, rpom, dpom).Put(
+			"/{deviceId}/move",
+			dc.Move(),
 		)
 	})
 }
