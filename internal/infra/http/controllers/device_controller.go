@@ -149,13 +149,12 @@ func (c DeviceController) Delete() http.HandlerFunc {
 
 func (c DeviceController) Move() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
-		house_id := r.Context().Value(HouseKey).(domain.House).Id
-		room_id := r.Context().Value(RoomKey).(domain.Room).Id
+		target_house_id := r.Context().Value(HouseKey).(domain.House).Id
+		target_room_id := r.Context().Value(RoomKey).(domain.Room).Id
 		device := r.Context().Value(DeviceKey).(domain.Device)
 
-		device.House_id = house_id
-		device.Room_id = room_id
+		device.House_id = target_house_id
+		device.Room_id = target_room_id
 
 		device, err := c.deviceServise.Update(device)
 		if err != nil {

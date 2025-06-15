@@ -11,7 +11,6 @@ type House struct {
 	Address     string
 	Lat         float64
 	Lon         float64
-	//Rooms       []Room
 	CreateDate  time.Time
 	UpdatedDate time.Time
 	DeleteDate  *time.Time
